@@ -13,6 +13,8 @@ function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   // Currently highlighted payroll record for viewing salary slip
   const [selectedPayrollId, setSelectedPayrollId] = useState(null);
+  // Mobile drawer open state
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const renderCurrentPage = () => {
     switch (activeTab) {
@@ -59,12 +61,30 @@ function App() {
 
   return (
     <div className="app-layout">
+      {/* Mobile Drawer Backdrop */}
+      {mobileMenuOpen && (
+        <div
+          className="mobile-backdrop"
+          onClick={() => setMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       {/* Sidebar Navigation */}
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Sidebar
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        mobileMenuOpen={mobileMenuOpen}
+        setMobileMenuOpen={setMobileMenuOpen}
+      />
 
       {/* Main Content Area */}
       <div className="main-wrapper">
-        <Navbar activeTab={activeTab} />
+        <Navbar
+          activeTab={activeTab}
+          mobileMenuOpen={mobileMenuOpen}
+          setMobileMenuOpen={setMobileMenuOpen}
+        />
         <main className="content-container">
           {renderCurrentPage()}
         </main>

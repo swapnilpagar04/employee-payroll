@@ -1,7 +1,7 @@
 import React from 'react';
-import { Calendar, UserCheck } from 'lucide-react';
+import { Calendar, UserCheck, Menu } from 'lucide-react';
 
-const Navbar = ({ activeTab }) => {
+const Navbar = ({ activeTab, mobileMenuOpen, setMobileMenuOpen }) => {
   const pageTitles = {
     dashboard: 'Dashboard Overview',
     employees: 'Employee Management',
@@ -11,7 +11,7 @@ const Navbar = ({ activeTab }) => {
   };
 
   const currentDate = new Date().toLocaleDateString('en-US', {
-    weekday: 'long',
+    weekday: 'short',
     year: 'numeric',
     month: 'short',
     day: 'numeric'
@@ -20,6 +20,15 @@ const Navbar = ({ activeTab }) => {
   return (
     <header className="navbar">
       <div className="navbar-left">
+        {setMobileMenuOpen && (
+          <button
+            className="mobile-menu-toggle"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Open navigation menu"
+          >
+            <Menu size={22} />
+          </button>
+        )}
         <h1 className="page-title">{pageTitles[activeTab] || 'Payroll Management'}</h1>
       </div>
       <div className="navbar-right">
@@ -32,8 +41,8 @@ const Navbar = ({ activeTab }) => {
             <UserCheck size={18} />
           </div>
           <div className="user-info">
-            <span className="user-name">Administrator</span>
-            <span className="user-role">HR & Payroll Dept</span>
+            <span className="user-name">Admin</span>
+            <span className="user-role">Payroll</span>
           </div>
         </div>
       </div>

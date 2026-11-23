@@ -67,15 +67,15 @@ const Payroll = ({ setActiveTab, setSelectedPayrollId }) => {
     }
   };
 
-  // Live Automatic Calculations
+  // Live Automatic Calculations with 2-decimal precision
   const numBasic = parseFloat(basicSalary) || 0;
   const numHra = parseFloat(hra) || 0;
   const numAllowances = parseFloat(allowances) || 0;
   const numBonus = parseFloat(bonus) || 0;
   const numDeductions = parseFloat(deductions) || 0;
 
-  const grossSalary = numBasic + numHra + numAllowances + numBonus;
-  const netSalary = grossSalary - numDeductions;
+  const grossSalary = Math.round((numBasic + numHra + numAllowances + numBonus) * 100) / 100;
+  const netSalary = Math.round((grossSalary - numDeductions) * 100) / 100;
 
   const handleApplyDefaults = () => {
     if (numBasic > 0) {

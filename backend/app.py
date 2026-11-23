@@ -187,6 +187,9 @@ def create_payroll():
         gross_salary = round(basic_salary + hra + allowances + bonus, 2)
         net_salary = round(gross_salary - deductions, 2)
 
+        if net_salary < 0:
+            return jsonify({"error": "Net salary cannot be negative. Total deductions cannot exceed gross salary."}), 400
+
     except (ValueError, TypeError):
         return jsonify({"error": "Salary components must be valid numbers."}), 400
 
