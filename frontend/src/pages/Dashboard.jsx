@@ -7,7 +7,8 @@ import {
   ArrowRight,
   UserPlus,
   Calculator,
-  RefreshCw
+  RefreshCw,
+  AlertCircle
 } from 'lucide-react';
 import { getDashboardData, formatCurrency, formatDate } from '../api';
 
@@ -52,12 +53,46 @@ const Dashboard = ({ setActiveTab, setSelectedPayrollId }) => {
   }
 
   if (error) {
+    const isNetworkError = error === 'Network Error' || String(error).toLowerCase().includes('network error');
     return (
-      <div className="error-banner">
-        <p>{error}</p>
-        <button onClick={fetchDashboard} className="btn btn-secondary btn-sm">
-          Retry
-        </button>
+      <div className="card m-3 p-4" style={{ padding: '24px' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
+          <AlertCircle size={32} color="#ef4444" style={{ flexShrink: 0, marginTop: '2px' }} />
+          <div style={{ flex: 1 }}>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#b91c1c', marginBottom: '8px' }}>
+              {isNetworkError ? 'Cannot Connect to Backend (Network Error)' : 'Backend Connection Notice'}
+            </h3>
+            <p style={{ color: '#4b5563', fontSize: '0.92rem', marginBottom: '14px', lineHeight: '1.5' }}>
+              {error}
+            </p>
+
+            <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '10px', padding: '16px 20px', fontSize: '0.88rem', color: '#991b1b', marginBottom: '16px' }}>
+              <p style={{ fontWeight: 700, marginBottom: '8px', fontSize: '0.92rem' }}>
+                Required Vercel Fix to Enable Public API Access:
+              </p>
+              <ol style={{ paddingLeft: '20px', lineHeight: '1.8' }}>
+                <li>
+                  Go to your <strong>Vercel Dashboard</strong> → Click project <strong>backend-swapnil-68e2</strong> → <strong>Settings</strong> → <strong>Deployment Protection</strong>.
+                </li>
+                <li>
+                  Set <strong>Vercel Authentication</strong> to <strong>Disabled</strong>. (Vercel is currently redirecting all API requests to the Vercel SSO login page, which the browser blocks).
+                </li>
+                <li>
+                  In <strong>Settings → Environment Variables</strong> on Vercel, make sure you have added:
+                  <ul style={{ marginTop: '4px', paddingLeft: '18px' }}>
+                    <li><code>SUPABASE_URL</code>: <em>your Supabase project URL</em></li>
+                    <li><code>SUPABASE_KEY</code>: <code>sb_publishable_eevThvCccRtvYH4hRLOwVA_nVmvozJ9</code></li>
+                  </ul>
+                </li>
+              </ol>
+            </div>
+
+            <button onClick={fetchDashboard} className="btn btn-primary">
+              <RefreshCw size={16} />
+              <span>Retry Connection</span>
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
