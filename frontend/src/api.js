@@ -1,7 +1,11 @@
 import axios from 'axios';
 
 // Base API configuration
-const API_BASE_URL = 'http://127.0.0.1:5000/api';
+const envApiUrl = import.meta.env.VITE_API_URL || 'https://backend-swapnil-68e2.vercel.app';
+// Normalize URL so requests to '/employees' map to '.../api/employees'
+const API_BASE_URL = envApiUrl.endsWith('/api')
+  ? envApiUrl
+  : `${envApiUrl.replace(/\/+$/, '')}/api`;
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -9,6 +13,19 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+// Interceptor to catch HTML responses (e.g., if Vercel Deployment Protection login redirects the request)
+api.interceptors.response.use(
+  (response) => {
+    if (typeof response.data === 'string' && response.data.includes('<!DOCTYPE html>')) {
+      return Promise.reject(new Error('Backend returned HTML instead of JSON. If your Vercel project has "Deployment Protection" enabled, please disable it in Vercel Project Settings -> Deployment Protection.'));
+    }
+    return response;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 // Helper for formatting currency
 export const formatCurrency = (amount) => {

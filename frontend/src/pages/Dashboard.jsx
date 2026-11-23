@@ -24,7 +24,8 @@ const Dashboard = ({ setActiveTab, setSelectedPayrollId }) => {
       setData(res);
     } catch (err) {
       console.error('Failed to load dashboard:', err);
-      setError('Failed to connect to backend server. Make sure the Flask server is running.');
+      const msg = err.response?.data?.message || err.response?.data?.error || err.message || 'Failed to connect to backend server. Make sure the backend is accessible.';
+      setError(msg);
     } finally {
       setLoading(false);
     }
